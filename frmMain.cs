@@ -15,8 +15,10 @@ namespace Sharp
         //энумы для рисования по выбору
         private enum eMode : int {shapeCross, shapeLine, shapeCircle, modeSelect};
         private eMode mode = eMode.shapeCross;
+        //фигурки для окна фигур
         private ImageList imglstFigures = new ImageList();
 
+        //получает объект Editor открытого в данный момент окна
         private Editor CurrentEditor{
             get 
             {
@@ -29,6 +31,7 @@ namespace Sharp
             }
         }
 
+        //получает текущий PaintBox
         private PictureBox CurrentPb {
             get 
             {
@@ -46,7 +49,7 @@ namespace Sharp
         //for line
         private Point line_beg;
         private bool btn_down = false;
-        //for CTRL
+        //если нажат Контрол
         private bool ctrl = false;
 
         public frmMain()
@@ -54,6 +57,7 @@ namespace Sharp
             InitializeComponent();
         }
 
+        //создает новую вкладку
         private int NewPage()
         { 
             TabPage tpNew = new TabPage("Untitled");
@@ -80,6 +84,7 @@ namespace Sharp
             return tcSheets.TabCount-1;
         }
 
+        //функция - закрыть вкладку с индексом @index
         private void CloseFile(int index)
         {
             BeforeClose(index);
@@ -91,6 +96,7 @@ namespace Sharp
             }
         }
 
+        //сохранить объект @ed
         private void SaveEditor(Editor ed)
         {
             if (ed.cur_fname != "")
@@ -103,6 +109,7 @@ namespace Sharp
             }
         }
 
+        //сохранить все объекты Editor
         private void SaveAllEditors()
         {
             for (int i = 0; i < tcSheets.TabCount; i++)
@@ -112,6 +119,7 @@ namespace Sharp
             }
         }
 
+        //событие, присылаемое перед закрытием вкладки, на вход подается индекс элемента
         private void BeforeClose(int index)
         {
             Editor tempeditor = GetEditr(index);
@@ -126,6 +134,8 @@ namespace Sharp
                 }
             }
         }
+
+        //прочекать все открытые вкладки и закрыть их
         private void BeforeClose()
         {
             for (int i = 0; i < tcSheets.TabCount; i++)
@@ -134,6 +144,7 @@ namespace Sharp
             }
         }
 
+        //получает объект @Editor по его индексу
         private Editor GetEditr(int index)
         {
             return tcSheets.TabPages[index].Tag as Editor; 
@@ -158,6 +169,7 @@ namespace Sharp
             }
         }
 
+        //получает объект @TabPage по хэндлу контрола
         private TabPage GetTabIndex(System.IntPtr handle)
         {
             return Control.FromHandle(handle) as TabPage;
@@ -186,6 +198,7 @@ namespace Sharp
             }
         }
 
+        //Menu: File -> New
         private void NewFile()
         {
             int newpage = this.NewPage();
@@ -193,6 +206,7 @@ namespace Sharp
             CurrentEditor.Refresh();
         }
 
+        //Menu: File -> Save
         private void Save()
         {
             if (CurrentEditor == null) return;
@@ -206,6 +220,7 @@ namespace Sharp
             }
         }
         
+        //Menu: File -> Save As
         private void SaveAs(Editor ed)
         {
             if (ed == null) return;
@@ -225,6 +240,7 @@ namespace Sharp
             }
         }
 
+        //Menu: File -> Load
         private void LoadFile()
         {
             if (dlgOpen.ShowDialog() == DialogResult.OK)
@@ -239,16 +255,19 @@ namespace Sharp
         }
 
         //стандартные обработчики
+        //Save button
         private void btnSave_Click(object sender, EventArgs e)
         {
             this.Save();
         }
 
+        //Load button
         private void btnLoad_Click(object sender, EventArgs e)
         {
             this.LoadFile();
         }
 
+        //Refresh button
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             if (CurrentEditor == null) return;
@@ -256,6 +275,7 @@ namespace Sharp
             CurrentEditor.Refresh();
         }
 
+        //Clear button
         private void btnClear_Click(object sender, EventArgs e)
         {
             if (CurrentEditor == null) return;
@@ -264,6 +284,7 @@ namespace Sharp
             CurrentEditor.Refresh();
         }
 
+        //Preview area mouse click
         private void pbPreview_MouseClick(object sender, MouseEventArgs e)
         {
             if (CurrentPb == null) return;
@@ -278,36 +299,43 @@ namespace Sharp
             }
         }
 
+        //File - New
         private void tmiFileNew_Click(object sender, EventArgs e)
         {
             this.NewFile();
         }
 
+        //File - Close
         private void tmiFileClose_Click(object sender, EventArgs e)
         {
             this.CloseFile(tcSheets.SelectedIndex);
         }
 
+        //File - Exit
         private void tmiFileExit_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
+        //File - Save
         private void tmiFileSave_Click(object sender, EventArgs e)
         {
             this.Save();
         }
 
+        //File - SaveAs
         private void tmiFileSaveAs_Click(object sender, EventArgs e)
         {
             this.SaveAs(CurrentEditor);
         }
 
+        //File - Load
         private void tmiFileLoad_Click(object sender, EventArgs e)
         {
             this.LoadFile();
         }
 
+        //Press "-" in preview area
         private void pbMinus_Click(object sender, EventArgs e)
         {
             if (CurrentPb == null) return;
@@ -322,6 +350,7 @@ namespace Sharp
             CurrentEditor.Refresh();
         }
 
+        //Press "+" in preview area
         private void pbPlus_Click(object sender, EventArgs e)
         {
             if (CurrentPb == null) return;
@@ -336,6 +365,7 @@ namespace Sharp
             CurrentEditor.Refresh();
         }
 
+        //Menu -> About
         private void btnAbout_Click(object sender, EventArgs e)
         {
             frmAbout fa = new frmAbout();
@@ -343,6 +373,7 @@ namespace Sharp
             fa.Dispose();
         }
 
+        //Mode - Cross
         private void tsCross_Click(object sender, EventArgs e)
         {
             tsCross.Checked = true;
@@ -353,6 +384,7 @@ namespace Sharp
             mode = eMode.shapeCross;
         }
 
+        //Mode - Line
         private void tsLine_Click(object sender, EventArgs e)
         {
             tsCross.Checked = false;
@@ -363,6 +395,7 @@ namespace Sharp
             mode = eMode.shapeLine;
         }
 
+        //Mode - Circle
         private void tsCircle_Click(object sender, EventArgs e)
         {
             tsCross.Checked = false;
@@ -373,6 +406,7 @@ namespace Sharp
             mode = eMode.shapeCircle;
         }
 
+        //Mode - Figure Select
         private void tsSelect_Click(object sender, EventArgs e)
         {
             tsCross.Checked = false;
@@ -383,6 +417,7 @@ namespace Sharp
             mode = eMode.modeSelect;
         }
 
+        //Mouse button down on PaintBox
         private void Canvas_MouseDown(object sender, MouseEventArgs e)
         {
             btn_down = true;
@@ -403,6 +438,7 @@ namespace Sharp
             }
         }
 
+        //Mouse cursor move on PaintBox
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
             if (!btn_down) return;
@@ -418,6 +454,7 @@ namespace Sharp
             }
         }
 
+        //Mouse button up on PaintBox
         private void Canvas_MouseUp(object sender, MouseEventArgs e)
         {
             btn_down = false;
@@ -444,16 +481,19 @@ namespace Sharp
             }
         }
 
+        //Key down
         private void frmMain_KeyDown(object sender, KeyEventArgs e)
         {
             this.ctrl = e.Control;
         }
 
+        //Key up
         private void frmMain_KeyUp(object sender, KeyEventArgs e)
         {
             this.ctrl = e.Control;
         }
 
+        //Изменился индекс текущей вкладки
         private void tcSheets_SelectedIndexChanged(object sender, EventArgs e)
         {
             AfterDraw();
@@ -464,21 +504,19 @@ namespace Sharp
                 CurrentEditor.Refresh();
         }
 
+        //Главная форма закрывается
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             BeforeClose();
         }
 
+        //Menu - Save All
         private void btnSaveAll_Click(object sender, EventArgs e)
         {
             SaveAllEditors();
         }
 
-        private void tmi_FileSaveAll_Click(object sender, EventArgs e)
-        {
-            SaveAllEditors();
-        }
-
+        //Main form is loaded. Preparing.
         private void frmMain_Load(object sender, EventArgs e)
         {
             imglstFigures.Images.Add(Sharp.Properties.Resources.gtk_close_7736);
@@ -488,6 +526,7 @@ namespace Sharp
             lvShapes.SmallImageList = imglstFigures;
         }
 
+        //В списке фигур что-то поменялось
         private void lvShapes_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (CurrentEditor != null)
@@ -498,6 +537,7 @@ namespace Sharp
             }
         }
 
+        //"Удалить фигуру"
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (CurrentEditor != null)

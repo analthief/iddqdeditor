@@ -27,6 +27,7 @@ namespace Usermods.ExtList
         //разрешает или запрещает вызов событий - используется при множественном изменении (при загрузке),
 		//когда генерируется слишком много ненужных событий.
 		public bool Silent = false;
+        //сами описатели событий
         public event ChangedEventHandler BeforeChanged;
         public event ChangedEventHandler AfterChanged;
 

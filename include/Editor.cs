@@ -10,14 +10,16 @@ using Usermods.ExtList;
 
 namespace Sharp
 {
-    public class Editor
+    //Класс представляет средства для редактирования векторных фигур на поле
+    public class Editor : IDisposable
     {
+        //Выбранные индексы
         private int[] SelectedIndexi;
 
         //List with points
         private ExtList<Shape> shapelist;
 
-        //On modification
+        //Состояние списка фигур: менялись ли они с момента последнего сохранения
         private bool shapelist_modificated_private;
         public bool shapelist_modificated
         {
@@ -47,7 +49,7 @@ namespace Sharp
             }
         }
 
-        //filename
+        //Имя файла, сопоставленное с текущим объектом
         private string cur_fname_private = "";
         public string cur_fname
         {
@@ -109,6 +111,9 @@ namespace Sharp
         public delegate void dShapesModificationHandler(int index, ref ExtList<Shape> s);
         private dShapesModificationHandler onShapesChanged;
 
+        // Track whether Dispose has been called.
+        private bool disposed = false;
+
 
         //констуктор
         public Editor(int x, int y, ref PictureBox canvas, int index)
@@ -128,6 +133,7 @@ namespace Sharp
             internal_index = index;
         }
 
+        //Формирует контейнер с функциями, которые нужны для отрисовки фигур
         private DelegateContainer GetDeleateContainer()
         {
             DelegateContainer dlc = new DelegateContainer();
@@ -138,22 +144,26 @@ namespace Sharp
             return dlc;
         }
 
+        //Вызываемая функция - возвращает объект @Graphics, сопопставленный с текущим объектом.
+        //Используется во внешних вызовах.
         private Graphics GetGraphics()
         {
             return this.screen;
         }
 
+        //Событие, приылаемое перед измением списка фигур
         private void shapelist_AfterChanged(object sender)
         {
             onShapesChanged(this.internal_index, ref shapelist);
         }
 
+        //Событие, посылаемое после изменения списка фигур
         private void shapelist_BeforeChanged(object sender)
         {
             shapelist_modificated = true;
         }
 
-        //сохраняет фигуру в файл
+        //Сохраняет список фигур в указанный файл
         public void SaveToFile(string fname)
         {
             try
@@ -180,12 +190,13 @@ namespace Sharp
             }
         }
 
+        //Сохраняет список фигур в текущий файл
         public void SaveToFile()
         {
             this.SaveToFile(this.cur_fname);
         }
 
-        //load from file
+        //Загружает список фигур из указанного файла
         public void LoadFromFile(string fname)
         {
             try
@@ -280,6 +291,7 @@ namespace Sharp
             SynchronizeImage();
         }
 
+        //Выводит выбранные фигуры цветом по умолчанию (визуально отменяет их выбор)
         private void FillSelectedBlack(int[] oldindexes)
         {
             if (oldindexes == null) return;
@@ -291,6 +303,7 @@ namespace Sharp
             }
         }
 
+        //Визуально выделяет список выбранных фигур
         public void SelectFigures(int[] indexes)
         {
             //deselect previous
@@ -314,6 +327,7 @@ namespace Sharp
             SynchronizeImage();
         }
 
+        //Удаляет заданный список фигур
         public void DeleteFigures(int[] indexes)
         {
             int delta = 0;
@@ -324,11 +338,13 @@ namespace Sharp
             }
         }
 
+        //Перерисовывает фигуру заданым цветом
         private void ReDrawShape(Shape sp, Color clr)
         {
             sp.Draw(clr);
         }
 
+        //Получает ближайшую фигуру к указанной экранной точке
         public int GetNearShape(Point pt)
         {
             fpoint fpt = ScreenToReal(pt);
@@ -349,9 +365,8 @@ namespace Sharp
             return minsp;
         }
 
-        //редефайнит координтаты. нужно, если меняем масштаб избражения (основного),
-        //при этом также переприсваивается Битмэп для отрисовки
-        //и изменяются коэффициенты пересчета координат
+        //Редефайнит координтаты. Нужно, если меняем масштаб избражения (основного),
+        //при этом также переприсваивается Битмэп для отрисовки и изменяются коэффициенты пересчета координат.
         public void RedefineXY(int newx, int newy)
         {
             screen_h = newy;
@@ -366,14 +381,14 @@ namespace Sharp
             screen = Graphics.FromImage(bmp);
         }
 
-        //синхронизирует канву и битмэп
+        //Синхронизирует канву и битмэп
         public void SynchronizeImage()
         {
             cnv.Image = bmp;
             onRefresh();
         }
 
-        //очищает все
+        //Очищает список фигур
         public void ClearList()
         {
             shapelist.Clear();
@@ -381,6 +396,7 @@ namespace Sharp
         }
 
         //ОБРАБОТКА ФИГУР
+        //Добавить крестик
         public void AddCross(int x, int y)
         {
             sCross cross = new sCross(GetDeleateContainer(), x, y);
@@ -390,6 +406,7 @@ namespace Sharp
             SynchronizeImage();
         }
 
+        //Добавить линию
         public void AddLine(Point p1, Point p2)
         {
             sLine line = new sLine(GetDeleateContainer(), p1, p2);
@@ -399,6 +416,7 @@ namespace Sharp
             SynchronizeImage();
         }
 
+        //Добавить эллипс
         public void AddEllipse(Point up, Point down)
         {
             sCircle circle = new sCircle(GetDeleateContainer(), up, down);
@@ -408,54 +426,76 @@ namespace Sharp
             SynchronizeImage();
         }
 
+        //предыдущая точка
         private Point oldb;
+        //Рисует временную линию средствами gdi32
         public void TempLine(Point a, Point b)
         {
-            IntPtr hdc = Gdi32.GetDC(cnv.Handle);
-            Gdi32.SetROP2(hdc, Gdi32.R2_NOT);
+            IntPtr hdc = NativeMethods.GetDC(cnv.Handle);
+            NativeMethods.SetROP2(hdc, NativeMethods.R2_NOT);
 
             if ((oldb.X != int.MinValue) & (oldb.Y != int.MinValue))
             {
-                Gdi32.MoveToEx(hdc, a.X, a.Y, IntPtr.Zero);
-                Gdi32.LineTo(hdc, oldb.X, oldb.Y);
+                NativeMethods.MoveToEx(hdc, a.X, a.Y, IntPtr.Zero);
+                NativeMethods.LineTo(hdc, oldb.X, oldb.Y);
             }
 
-            Gdi32.MoveToEx(hdc, a.X, a.Y, IntPtr.Zero);
-            Gdi32.LineTo(hdc, b.X, b.Y);
+            NativeMethods.MoveToEx(hdc, a.X, a.Y, IntPtr.Zero);
+            NativeMethods.LineTo(hdc, b.X, b.Y);
             
             oldb = b;
-            Gdi32.ReleaseDC(cnv.Handle, hdc);
+            NativeMethods.ReleaseDC(cnv.Handle, hdc);
         }
 
+        //Рисует временный эллипс средствами gdi32
         public void TempEllipse(Point a, Point b)
         {
-            IntPtr hdc = Gdi32.GetDC(cnv.Handle);
+            IntPtr hdc = NativeMethods.GetDC(cnv.Handle);
             sCircle Circle;
             Rectangle rect;
 
-            Gdi32.SetROP2(hdc, Gdi32.R2_NOT);
-            Gdi32.SelectObject(hdc, Gdi32.GetStockObject(Gdi32.HOLLOW_BRUSH));
+            NativeMethods.SetROP2(hdc, NativeMethods.R2_NOT);
+            NativeMethods.SelectObject(hdc, NativeMethods.GetStockObject(NativeMethods.HOLLOW_BRUSH));
             if ((oldb.X != int.MinValue) & (oldb.Y != int.MinValue))
             {
                 Circle = new sCircle(GetDeleateContainer(), a, oldb);
                 rect = Circle.GetRect();
 
-                Gdi32.Ellipse(hdc, rect.X, rect.Y, rect.Width, rect.Height);
+                NativeMethods.Ellipse(hdc, rect.X, rect.Y, rect.Width, rect.Height);
             }
 
             Circle = new sCircle(GetDeleateContainer(), a, b);
             rect = Circle.GetRect();
-            Gdi32.Ellipse(hdc, rect.X, rect.Y, rect.Width, rect.Height);
+            NativeMethods.Ellipse(hdc, rect.X, rect.Y, rect.Width, rect.Height);
             
             oldb = b;
-            Gdi32.ReleaseDC(cnv.Handle, hdc);
+            NativeMethods.ReleaseDC(cnv.Handle, hdc);
         }
 
+        //Подготавливает текущий объект к отрисовке временных фигур
         public void PrepareToTempDraw()
         {
             oldb.X = int.MinValue;
             oldb.Y = int.MinValue;
         }
 
+        //for IDisposable
+        //мы должны уничтожить объект Bitmap перед удалением объекта
+        protected virtual void Dispose(bool disposing)
+        {
+            // Check to see if Dispose has already been called.
+            if (!this.disposed)
+            {
+                bmp.Dispose();
+                // Note disposing has been done.
+                disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

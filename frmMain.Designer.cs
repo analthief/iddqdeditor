@@ -160,7 +160,7 @@
             | System.Windows.Forms.Keys.S)));
             this.tmi_FileSaveAll.Size = new System.Drawing.Size(187, 22);
             this.tmi_FileSaveAll.Text = "Save A&ll";
-            this.tmi_FileSaveAll.Click += new System.EventHandler(this.tmi_FileSaveAll_Click);
+            this.tmi_FileSaveAll.Click += new System.EventHandler(this.btnSaveAll_Click);
             // 
             // tmiFileSaveAs
             // 

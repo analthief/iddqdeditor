@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 
+//Обертка для библиотеки gdi32.dll
 namespace Sharp
 {
-    public static class Gdi32
+    public static class NativeMethods
     {
         [DllImport("gdi32.dll", EntryPoint = "SetROP2", CallingConvention = CallingConvention.StdCall)]
         public extern static int SetROP2(IntPtr hdc, int fnDrawMode);
@@ -33,7 +34,7 @@ namespace Sharp
         public extern static IntPtr SelectObject(IntPtr hdc, IntPtr OBJECT);
 
         public const int R2_NOT = 6;  // Inverted drawing mode
-        public const int R2_XOR = 7;  // Inverted drawing mode
-        public const int HOLLOW_BRUSH = 5;
+        public const int R2_XOR = 7;  // Xor drawing mode
+        public const int HOLLOW_BRUSH = 5; //Hollow brush
     }
 }

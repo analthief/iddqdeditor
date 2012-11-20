@@ -21,6 +21,8 @@ using Usermods.Shape;
 
 namespace Usermods.Shape
 {
+    //Класс, представлящий собой контейнер делегатов для передачи нескольких функций между объектами
+    //TODO: сделать универсальный контейнер со списком или ХэшТэйблом
     public class DelegateContainer
     {
         public delegate fpoint dScreenToReal(Point pt);
@@ -32,22 +34,28 @@ namespace Usermods.Shape
         public dGetGraphics fGetGraphics;
     }
 
+    //Класс фигуры
     public abstract class Shape
     {
         protected DelegateContainer dlc;
+        
         protected Shape(DelegateContainer _dlc)
         {
             this.dlc = _dlc;
         }
 
+        //отрисовка фигуры заданным цветом (Graphics нам возвратит DelegateContainer)
         public abstract void Draw(Color clr);
+        //отрисовка фигуры черным цветом
         public virtual	void Draw()
         {
             Draw(Color.Black);
         }
 		
+        //Сохранить в бинарном формате
         public abstract void SaveBinary(BinaryWriter bw);
 
+        //Загрузить в бинарном формате
         public static Shape LoadBinary(BinaryReader br, DelegateContainer _dlc)
         {
             byte Signature = br.ReadByte();
@@ -63,13 +71,17 @@ namespace Usermods.Shape
             }
         }
 
+        //Получает расстояние от данной точки до фигуры
         public abstract double GetR(fpoint f);
+        //Получает текстовое описание фигуры (координаты, итд)
         public abstract string GetDesc();
     }
 
+    //Крестик
     public class sCross : Shape
     {
         public static byte Sign = 0;
+        //центр
         private fpoint Center;
         private Pen _pen;
 
@@ -113,10 +125,13 @@ namespace Usermods.Shape
         }
     }
 
+    //Линия
     public class sLine : Shape
     {
         public static byte Sign = 1;
+        //точка начала
         private fpoint fpBeg;
+        //точка конца
         private fpoint fpEnd;
         private Pen _pen;
 
@@ -183,10 +198,13 @@ namespace Usermods.Shape
         }
     }
 
+    //Окружность
     public class sCircle : Shape
     {
         public static byte Sign = 2;
+        //Центр
         private fpoint Center;
+        //Радиус
         private double Radius;
 
         private Pen _pen;
@@ -205,6 +223,9 @@ namespace Usermods.Shape
             this.Radius = r;
         }
 
+        //Сводка:
+        //    Получает Rectangle для текущего объекта. Вторые два параметра - НЕ ДЛИНА И ШИРИНА.
+        //    Это - координаты нижнего правого угла 
         public Rectangle GetRect()
         {
             Point int_uppoint = base.dlc.fRealToSreeen(new fpoint(this.Center.x - Radius, this.Center.y - Radius));

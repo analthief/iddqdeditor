@@ -20,7 +20,7 @@ namespace Usermods.Fpoint
             y = _y;
         }
 
-        //create new
+        //create void point
         public fpoint()
         {
             x = 0;
@@ -68,11 +68,13 @@ namespace Usermods.Fpoint
             return (a.x != b.x) || (a.y != b.y);
         }
 
+        //Расстояние между двумя точками
         public static double GetRasst(fpoint a, fpoint b)
         {
             return Math.Sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
         }
 
+        //Длина вектора с началом в точке (0,0)
         public static double GetRasstNormalized(fpoint a)
         {
             return Math.Sqrt(a.x * a.x + a.y * a.y);

@@ -13,7 +13,8 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>Sharp.main</StartupObject>
-    <ApplicationIcon>appico.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -70,9 +71,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Editor.cs" />
-    <Compile Include="Extlist.cs" />
-    <Compile Include="Fpoint.cs" />
     <Compile Include="frmAbout.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -85,7 +83,11 @@
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Gdi32.cs" />
+    <Compile Include="include\Editor.cs" />
+    <Compile Include="include\Extlist.cs" />
+    <Compile Include="include\Fpoint.cs" />
+    <Compile Include="include\Gdi32.cs" />
+    <Compile Include="include\Shape.cs" />
     <Compile Include="main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="frmAbout.resx">
@@ -115,7 +117,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Shape.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\document-save-as-6.png" />
@@ -139,7 +140,6 @@
     <None Include="res\add_2226.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="appico.ico" />
     <None Include="res\select_cur.png" />
     <None Include="Resources\Безымянный.png" />
     <None Include="res\save_all_3770.png" />
@@ -170,6 +170,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

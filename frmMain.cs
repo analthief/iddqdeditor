@@ -13,7 +13,7 @@ namespace Sharp
     public partial class frmMain : Form
     {
         //энумы для рисования по выбору
-        private enum eMode : int {shapeCross, shapeLine, shapeCircle, modeSelect};
+        private enum eMode : int {shapeCross, shapeLine, shapeCircle, shapeRect, modeSelect};
         private eMode mode = eMode.shapeCross;
         //фигурки для окна фигур
         private ImageList imglstFigures = new ImageList();
@@ -122,6 +122,7 @@ namespace Sharp
         //событие, присылаемое перед закрытием вкладки, на вход подается индекс элемента
         private void BeforeClose(int index)
         {
+            if (index == -1) return;
             Editor tempeditor = GetEditr(index);
             if (tempeditor.shapelist_modificated)
             {
@@ -380,6 +381,7 @@ namespace Sharp
             tsLine.Checked = false;
             tsCircle.Checked = false;
             tsSelect.Checked = false;
+            tsRect.Checked = false;
 
             mode = eMode.shapeCross;
         }
@@ -391,6 +393,7 @@ namespace Sharp
             tsLine.Checked = true;
             tsCircle.Checked = false;
             tsSelect.Checked = false;
+            tsRect.Checked = false;
 
             mode = eMode.shapeLine;
         }
@@ -402,6 +405,7 @@ namespace Sharp
             tsLine.Checked = false;
             tsCircle.Checked = true;
             tsSelect.Checked = false;
+            tsRect.Checked = false;
 
             mode = eMode.shapeCircle;
         }
@@ -413,8 +417,20 @@ namespace Sharp
             tsLine.Checked = false;
             tsCircle.Checked = false;
             tsSelect.Checked = true;
+            tsRect.Checked = false;
 
             mode = eMode.modeSelect;
+        }
+
+        private void tsRect_Click(object sender, EventArgs e)
+        {
+            tsCross.Checked = false;
+            tsLine.Checked = false;
+            tsCircle.Checked = false;
+            tsSelect.Checked = false;
+            tsRect.Checked = true;
+
+            mode = eMode.shapeRect;
         }
 
         //Mouse button down on PaintBox
@@ -435,6 +451,10 @@ namespace Sharp
                     CurrentEditor.PrepareToTempDraw();
                     line_beg = new Point(e.X, e.Y);
                     break;
+                case eMode.shapeRect:
+                    CurrentEditor.PrepareToTempDraw();
+                    line_beg = new Point(e.X, e.Y);
+                    break;
             }
         }
 
@@ -451,6 +471,9 @@ namespace Sharp
                 case eMode.shapeCircle:
                     CurrentEditor.TempEllipse(line_beg, new Point(e.X, e.Y));
                     break;
+               case eMode.shapeRect:
+                    CurrentEditor.TempRect(line_beg, new Point(e.X, e.Y));
+                    break;
             }
         }
 
@@ -466,6 +489,9 @@ namespace Sharp
                     break;
                 case eMode.shapeCircle:
                     CurrentEditor.AddEllipse(line_beg, new Point(e.X, e.Y));
+                    break;
+                case eMode.shapeRect:
+                    CurrentEditor.AddRect(line_beg, new Point(e.X, e.Y));
                     break;
                 case eMode.modeSelect:
                     //multiselect

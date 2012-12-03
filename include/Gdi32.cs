@@ -27,6 +27,9 @@ namespace Sharp
         [DllImport("gdi32.dll", EntryPoint = "Ellipse", CallingConvention = CallingConvention.StdCall)]
         public extern static bool Ellipse(IntPtr hdc, int nLeftRect, int nTopRect, int nRightRect, int nBottomRect);
 
+        [DllImport("gdi32.dll", EntryPoint = "Rectangle", CallingConvention = CallingConvention.StdCall)]
+        public extern static bool Rectangle(IntPtr hdc, int nLeftRect, int nTopRect, int nRightRect, int nBottomRect);
+
         [DllImport("gdi32.dll", EntryPoint = "GetStockObject", CallingConvention = CallingConvention.StdCall)]
         public extern static IntPtr GetStockObject(int OBJECT);
 

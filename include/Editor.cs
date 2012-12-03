@@ -426,6 +426,16 @@ namespace Sharp
             SynchronizeImage();
         }
 
+        //Добавить прямоугольник
+        public void AddRect(Point up, Point down)
+        {
+            sRect rect = new sRect(GetDeleateContainer(), up, down);
+            shapelist.Add(rect);
+
+            rect.Draw();
+            SynchronizeImage();
+        }
+
         //предыдущая точка
         private Point oldb;
         //Рисует временную линию средствами gdi32
@@ -442,6 +452,32 @@ namespace Sharp
 
             NativeMethods.MoveToEx(hdc, a.X, a.Y, IntPtr.Zero);
             NativeMethods.LineTo(hdc, b.X, b.Y);
+            
+            oldb = b;
+            NativeMethods.ReleaseDC(cnv.Handle, hdc);
+        }
+
+        //Рисует временный прямоугольник средствами gdi32
+        public void TempRect(Point a, Point b)
+        {
+            IntPtr hdc = NativeMethods.GetDC(cnv.Handle);
+            sRect Rect;
+            Rectangle rect;
+
+            NativeMethods.SetROP2(hdc, NativeMethods.R2_NOT);
+            NativeMethods.SelectObject(hdc, NativeMethods.GetStockObject(NativeMethods.HOLLOW_BRUSH));
+            if ((oldb.X != int.MinValue) & (oldb.Y != int.MinValue))
+            {
+                Rect = new sRect(GetDeleateContainer(), a, oldb);
+                rect = Rect.GetRect();
+
+                NativeMethods.Rectangle(hdc, rect.X, rect.Y, rect.Width, rect.Height);
+            }
+
+            Rect = new sRect(GetDeleateContainer(), a, b);
+            rect = Rect.GetRect();
+
+            NativeMethods.Rectangle(hdc, rect.X, rect.Y, rect.Width, rect.Height);
             
             oldb = b;
             NativeMethods.ReleaseDC(cnv.Handle, hdc);
@@ -467,7 +503,7 @@ namespace Sharp
             Circle = new sCircle(GetDeleateContainer(), a, b);
             rect = Circle.GetRect();
             NativeMethods.Ellipse(hdc, rect.X, rect.Y, rect.Width, rect.Height);
-            
+
             oldb = b;
             NativeMethods.ReleaseDC(cnv.Handle, hdc);
         }

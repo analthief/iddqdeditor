@@ -53,6 +53,7 @@
             this.tsLine = new System.Windows.Forms.ToolStripButton();
             this.btnAbout = new System.Windows.Forms.ToolStripButton();
             this.tsCircle = new System.Windows.Forms.ToolStripButton();
+            this.tsRect = new System.Windows.Forms.ToolStripButton();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.gbPreview = new System.Windows.Forms.GroupBox();
             this.pbPlus = new System.Windows.Forms.PictureBox();
@@ -90,7 +91,8 @@
             this.tsCross,
             this.tsLine,
             this.btnAbout,
-            this.tsCircle});
+            this.tsCircle,
+            this.tsRect});
             this.tsMain.Location = new System.Drawing.Point(0, 0);
             this.tsMain.Name = "tsMain";
             this.tsMain.Size = new System.Drawing.Size(846, 31);
@@ -299,6 +301,16 @@
             this.tsCircle.Text = "Circle";
             this.tsCircle.Click += new System.EventHandler(this.tsCircle_Click);
             // 
+            // tsRect
+            // 
+            this.tsRect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsRect.Image = global::Sharp.Properties.Resources.rect;
+            this.tsRect.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsRect.Name = "tsRect";
+            this.tsRect.Size = new System.Drawing.Size(28, 28);
+            this.tsRect.Text = "toolStripButton1";
+            this.tsRect.Click += new System.EventHandler(this.tsRect_Click);
+            // 
             // statusStrip
             // 
             this.statusStrip.Location = new System.Drawing.Point(0, 665);
@@ -485,6 +497,7 @@
         private System.Windows.Forms.ColumnHeader clhType;
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.ToolStripButton tsSelect;
+        private System.Windows.Forms.ToolStripButton tsRect;
     }
 }
 

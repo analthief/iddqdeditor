@@ -67,6 +67,8 @@ namespace Usermods.Shape
                     return new sLine(_dlc, br.ReadDouble(), br.ReadDouble(), br.ReadDouble(), br.ReadDouble());
                 case 2:
                     return new sCircle(_dlc, br.ReadDouble(), br.ReadDouble(), br.ReadDouble());
+                case 3:
+                    return new sRect(_dlc, br.ReadDouble(), br.ReadDouble(), br.ReadDouble(), br.ReadDouble());
                 default: return null;
             }
         }
@@ -260,6 +262,92 @@ namespace Usermods.Shape
         public override string GetDesc()
         {
             return "[" + Center.x.ToString() + ";" + Center.y.ToString() + "] r=" + Radius.ToString();
+        }
+    }
+
+    //Прямоуглльник
+    public class sRect : Shape
+    {
+        public static byte Sign = 3;
+        //Верхний левый
+        private fpoint Up;
+        //Нижний правый
+        private fpoint Down;
+
+        private Pen _pen;
+
+        public sRect(DelegateContainer _dlc, Point Down, Point Up)
+            : base(_dlc)
+        {
+            this.Up = base.dlc.fScreenToReal(Down);
+            this.Down = base.dlc.fScreenToReal(Up);
+        }
+
+        public sRect(DelegateContainer _dlc, double x1, double y1, double x2, double y2)
+            : base(_dlc)
+        {
+            this.Up = new fpoint(x1, y1);
+            this.Down = new fpoint(x2, y2);
+        }
+
+        public override void Draw(Color clr)
+        {
+            Point int_uppoint;
+            Point int_dwpoint;
+            
+            if (Up.y < Down.y)
+            {
+                int_uppoint = base.dlc.fRealToSreeen(Up);
+                int_dwpoint = base.dlc.fRealToSreeen(Down);
+            }
+            else
+            {
+                int_uppoint = base.dlc.fRealToSreeen(Down);
+                int_dwpoint = base.dlc.fRealToSreeen(Up);
+            }
+
+            if (int_uppoint.X > int_dwpoint.X)
+            {
+                int temp = int_dwpoint.Y;
+                int_dwpoint.Y = int_uppoint.Y;
+                int_uppoint.Y = temp;
+
+                Point tmp = int_dwpoint;
+                int_dwpoint = int_uppoint;
+                int_uppoint = tmp;
+            }
+
+            _pen = new Pen(clr);
+            base.dlc.fGetGraphics().DrawRectangle(_pen, int_uppoint.X, int_uppoint.Y, int_dwpoint.X - int_uppoint.X, int_dwpoint.Y - int_uppoint.Y);
+        }
+
+        public Rectangle GetRect()
+        {
+            Point int_uppoint = base.dlc.fRealToSreeen(Up);
+            Point int_dwpoint = base.dlc.fRealToSreeen(Down);
+
+            return new Rectangle(int_uppoint.X, int_uppoint.Y, int_dwpoint.X, int_dwpoint.Y);
+        }
+
+        public override void SaveBinary(BinaryWriter bw)
+        {
+            bw.Write(Sign);
+            bw.Write(Up.x);
+            bw.Write(Up.y);
+            bw.Write(Down.x);
+            bw.Write(Down.y);
+        }
+
+        public override double GetR(fpoint f)
+        {
+            if ((f.x > Up.x) && (f.x < Down.x) && (f.y > Up.y) && (f.y < Down.y)) return 10;
+            return -1;
+        }
+
+        public override string GetDesc()
+        {
+            return "[" + Up.x.ToString() + ";" + Up.y.ToString() + "]," +
+                     "[" + Down.x.ToString() + ";" + Down.y.ToString() + "]";
         }
     }
 }

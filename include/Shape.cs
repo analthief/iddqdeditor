@@ -265,7 +265,7 @@ namespace Usermods.Shape
         }
     }
 
-    //Прямоуглльник
+    //Прямоугольник
     public class sRect : Shape
     {
         public static byte Sign = 3;
@@ -290,32 +290,45 @@ namespace Usermods.Shape
             this.Down = new fpoint(x2, y2);
         }
 
-        public override void Draw(Color clr)
+        private void WHRect(out fpoint a, out fpoint b)
         {
-            Point int_uppoint;
-            Point int_dwpoint;
-            
+            fpoint uppoint;
+            fpoint dwpoint;
+
             if (Up.y < Down.y)
             {
-                int_uppoint = base.dlc.fRealToSreeen(Up);
-                int_dwpoint = base.dlc.fRealToSreeen(Down);
+                uppoint = Up;
+                dwpoint = Down;
             }
             else
             {
-                int_uppoint = base.dlc.fRealToSreeen(Down);
-                int_dwpoint = base.dlc.fRealToSreeen(Up);
+                uppoint = Down;
+                dwpoint = Up;
             }
 
-            if (int_uppoint.X > int_dwpoint.X)
+            if (uppoint.x > dwpoint.x)
             {
-                int temp = int_dwpoint.Y;
-                int_dwpoint.Y = int_uppoint.Y;
-                int_uppoint.Y = temp;
+                double temp = dwpoint.y;
+                dwpoint.y = uppoint.y;
+                uppoint.y = temp;
 
-                Point tmp = int_dwpoint;
-                int_dwpoint = int_uppoint;
-                int_uppoint = tmp;
+                fpoint tmp = dwpoint;
+                dwpoint = uppoint;
+                uppoint = tmp;
             }
+
+            a = uppoint;
+            b = dwpoint;
+        }
+
+        public override void Draw(Color clr)
+        {
+            fpoint a;
+            fpoint b;
+            WHRect(out a, out b);
+
+            Point int_uppoint = base.dlc.fRealToSreeen(a);
+            Point int_dwpoint = base.dlc.fRealToSreeen(b);
 
             _pen = new Pen(clr);
             base.dlc.fGetGraphics().DrawRectangle(_pen, int_uppoint.X, int_uppoint.Y, int_dwpoint.X - int_uppoint.X, int_dwpoint.Y - int_uppoint.Y);
@@ -340,7 +353,11 @@ namespace Usermods.Shape
 
         public override double GetR(fpoint f)
         {
-            if ((f.x > Up.x) && (f.x < Down.x) && (f.y > Up.y) && (f.y < Down.y)) return 10;
+            fpoint a;
+            fpoint b;
+            WHRect(out a, out b);
+
+            if ((f.x > a.x) && (f.y > a.y) && (f.x < b.x) && (f.y < b.y)) return 10;
             return -1;
         }
 

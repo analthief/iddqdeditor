@@ -38,6 +38,7 @@ namespace Usermods.Shape
     public abstract class Shape
     {
         protected DelegateContainer dlc;
+        public abstract string description {get;}
         
         protected Shape(DelegateContainer _dlc)
         {
@@ -75,8 +76,6 @@ namespace Usermods.Shape
 
         //Получает расстояние от данной точки до фигуры
         public abstract double GetR(fpoint f);
-        //Получает текстовое описание фигуры (координаты, итд)
-        public abstract string GetDesc();
     }
 
     //Крестик
@@ -86,6 +85,14 @@ namespace Usermods.Shape
         //центр
         private fpoint Center;
         private Pen _pen;
+        
+        public override string description
+        {
+            get
+            {
+                return "[" + Center.x.ToString() + ";" + Center.y.ToString() + "]";
+            }
+        }
 
         public sCross(DelegateContainer _dlc, int x, int y)
             : base(_dlc)
@@ -120,11 +127,6 @@ namespace Usermods.Shape
             double val = fpoint.GetRasst(this.Center, f);
             return val < 50 ? val: -1;
         }
-
-        public override string GetDesc()
-        {
-            return "[" + Center.x.ToString() + ";" + Center.y.ToString() + "]";
-        }
     }
 
     //Линия
@@ -136,6 +138,15 @@ namespace Usermods.Shape
         //точка конца
         private fpoint fpEnd;
         private Pen _pen;
+
+        public override string description
+        {
+            get
+            {
+                return "[" + fpBeg.x.ToString() + ";" + fpBeg.y.ToString() + "]," +
+                "[" + fpEnd.x.ToString() + ";" + fpEnd.y.ToString() + "]";
+            }
+        }
 
         public sLine(DelegateContainer _dlc, Point p1, Point p2)
             : base(_dlc)
@@ -184,19 +195,13 @@ namespace Usermods.Shape
                 bp = fpBeg - fpEnd;
                 cp = f - fpEnd;
             }
-            
+
             double a = fpoint.GetRasstNormalized(cp);
             double b = fpoint.GetRasstNormalized(bp);
-            double cosa = (bp.x * cp.x + bp.y * cp.y) / (a*b);
+            double cosa = (bp.x * cp.x + bp.y * cp.y) / (a * b);
             double res = cosa >= 0 ? Math.Sqrt(1 - cosa * cosa) * a : -1;
 
             return res < 50 ? res : -1;
-        }
-
-        public override string GetDesc()
-        {
-            return "[" + fpBeg.x.ToString() + ";" + fpBeg.y.ToString() + "]," +
-                "[" + fpEnd.x.ToString() + ";" + fpEnd.y.ToString() + "]";
         }
     }
 
@@ -208,8 +213,13 @@ namespace Usermods.Shape
         private fpoint Center;
         //Радиус
         private double Radius;
-
         private Pen _pen;
+
+        public override string description { 
+            get{
+            return "[" + Center.x.ToString() + ";" + Center.y.ToString() + "] r=" + Radius.ToString();
+            }
+        }
 
         public sCircle(DelegateContainer _dlc, Point Down, Point Up)
             : base(_dlc)
@@ -258,11 +268,6 @@ namespace Usermods.Shape
             double val = fpoint.GetRasst(Center, f);
             return val < Radius ? val : -1;
         }
-
-        public override string GetDesc()
-        {
-            return "[" + Center.x.ToString() + ";" + Center.y.ToString() + "] r=" + Radius.ToString();
-        }
     }
 
     //Прямоугольник
@@ -273,8 +278,16 @@ namespace Usermods.Shape
         private fpoint Up;
         //Нижний правый
         private fpoint Down;
-
         private Pen _pen;
+
+        public override string description
+        {
+            get
+            {
+               return "[" + Up.x.ToString() + ";" + Up.y.ToString() + "]," +
+                     "[" + Down.x.ToString() + ";" + Down.y.ToString() + "]";;
+            }
+        }
 
         public sRect(DelegateContainer _dlc, Point Down, Point Up)
             : base(_dlc)
@@ -359,12 +372,6 @@ namespace Usermods.Shape
 
             if ((f.x > a.x) && (f.y > a.y) && (f.x < b.x) && (f.y < b.y)) return 10;
             return -1;
-        }
-
-        public override string GetDesc()
-        {
-            return "[" + Up.x.ToString() + ";" + Up.y.ToString() + "]," +
-                     "[" + Down.x.ToString() + ";" + Down.y.ToString() + "]";
         }
     }
 }

@@ -189,11 +189,12 @@ namespace Sharp
 
             for(int i =0; i < shapelist.Count; i++)
             {
-                ListViewItem lvNItem = new ListViewItem(shapelist[i].GetDesc());
+                ListViewItem lvNItem = new ListViewItem(shapelist[i].description);
 
                 if (shapelist[i] is sCross) lvNItem.ImageIndex = 0;
                 if (shapelist[i] is sLine) lvNItem.ImageIndex = 1;
                 if (shapelist[i] is sCircle) lvNItem.ImageIndex = 2;
+                if (shapelist[i] is sCircle) lvNItem.ImageIndex = 3;
 
                 lvShapes.Items.Add(lvNItem);
             }

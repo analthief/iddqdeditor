@@ -197,6 +197,7 @@ namespace Sharp
                 if (shapelist[i] is sLine) lvNItem.ImageIndex = 1;
                 if (shapelist[i] is sCircle) lvNItem.ImageIndex = 2;
                 if (shapelist[i] is sCircle) lvNItem.ImageIndex = 3;
+                if (shapelist[i] is sRect) lvNItem.ImageIndex = 4;
 
                 lvShapes.Items.Add(lvNItem);
             }
@@ -551,6 +552,7 @@ namespace Sharp
             imglstFigures.Images.Add(Sharp.Properties.Resources.gtk_close_7736);
             imglstFigures.Images.Add(Sharp.Properties.Resources.stock_draw_line_3200);
             imglstFigures.Images.Add(Sharp.Properties.Resources.stock_draw_circle_unfilled_5329);
+            imglstFigures.Images.Add(Sharp.Properties.Resources.rect);
 
             lvShapes.SmallImageList = imglstFigures;
         }

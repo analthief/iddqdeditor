@@ -97,19 +97,19 @@ namespace Sharp
 
         //обработчики исключений
         public delegate void dExceptionHandler(string s, string q);
-        private dExceptionHandler onException;
+        public event dExceptionHandler onException;
 
         //обработчик события, когда нужно перерисовать Canvas
         public delegate void dRefreshHandler();
-        public dRefreshHandler onRefresh;
+        public event dRefreshHandler onRefresh;
 
         //обработчик события, когда нужно изменить заголовок
         public delegate void dCapRefreshHandler(int index, string a);
-        private dCapRefreshHandler onFileNameChanged;
+        public event dCapRefreshHandler onFileNameChanged;
 
         //обработчик события, когда изменился список фигур
         public delegate void dShapesModificationHandler(int index, ref ExtList<Shape> s);
-        private dShapesModificationHandler onShapesChanged;
+        public event dShapesModificationHandler onShapesChanged;
 
         // Track whether Dispose has been called.
         private bool disposed = false;
@@ -228,31 +228,6 @@ namespace Sharp
             {
                 shapelist_modificated = false;
             }
-        }
-
-        //назначает обработчик исключений для ошибок в классе (система событий)
-        public void setExceptionHandler(dExceptionHandler func)
-        {
-            onException = func;
-        }
-
-        //назначает обработчик обновления дополнительного кона
-        public void setRefreshHandler(dRefreshHandler func)
-        {
-            onRefresh = func;
-        }
-
-        //назначает обработчик события перерисовки заголовка вкладки
-        public void setCaptRefreshHandler(dCapRefreshHandler func)
-        {
-            onFileNameChanged = func;
-        }
-
-        //назначает обработчик события изменения фигур в списке для вывода их
-        //на форме
-        public void setShapesChangedHandler(dShapesModificationHandler func)
-        {
-            onShapesChanged = func;
         }
 
         //переводит экранные координаты в истинные

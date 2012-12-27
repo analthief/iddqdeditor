@@ -18,9 +18,16 @@ namespace Sharp
         //фигурки для окна фигур
         private ImageList imglstFigures = new ImageList();
 
+        //for line
+        private Point line_beg;
+        private bool btn_down = false;
+        //если нажат Контрол
+        private bool ctrl = false;
+
         //получает объект Editor открытого в данный момент окна
-        private Editor CurrentEditor{
-            get 
+        private Editor CurrentEditor
+        {
+            get
             {
                 if (tcSheets.SelectedTab != null)
                 {
@@ -32,10 +39,11 @@ namespace Sharp
         }
 
         //получает текущий PaintBox
-        private PictureBox CurrentPb {
-            get 
+        private PictureBox CurrentPb
+        {
+            get
             {
-                if (tcSheets.SelectedTab!= null)
+                if (tcSheets.SelectedTab != null)
                 {
                     return tcSheets.SelectedTab.Controls[0] as PictureBox;
                 }
@@ -45,12 +53,6 @@ namespace Sharp
                 }
             }
         }
-
-        //for line
-        private Point line_beg;
-        private bool btn_down = false;
-        //если нажат Контрол
-        private bool ctrl = false;
 
         public frmMain()
         {
@@ -72,10 +74,10 @@ namespace Sharp
             pbNew.MouseMove += Canvas_MouseMove;
 
             Editor edNew = new Editor(pbNew.Width, pbNew.Height, ref pbNew, (int)tpNew.Handle);
-            edNew.setExceptionHandler(new Editor.dExceptionHandler(ShowErr));
-            edNew.setRefreshHandler(new Editor.dRefreshHandler(AfterDraw));
-            edNew.setCaptRefreshHandler(new Editor.dCapRefreshHandler(RefCaption));
-            edNew.setShapesChangedHandler(new Editor.dShapesModificationHandler(RefShapes));
+            edNew.onException += ShowErr;
+            edNew.onRefresh += AfterDraw;
+            edNew.onFileNameChanged += RefCaption;
+            edNew.onShapesChanged += RefShapes;
 
             tpNew.Tag = edNew;
             tpNew.Controls.Add(pbNew);

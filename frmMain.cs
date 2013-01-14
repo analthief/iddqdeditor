@@ -116,8 +116,7 @@ namespace Sharp
         {
             for (int i = 0; i < tcSheets.TabCount; i++)
             {
-                Editor tempeditor = GetEditr(i);
-                SaveEditor(tempeditor);
+                SaveEditor(GetEditr(i));
             }
         }
 

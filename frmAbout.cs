@@ -121,7 +121,7 @@ namespace Sharp
             Refregerator.Prepare(ref modbit);
 
             Graphics gr = Graphics.FromImage(modbit);
-            gr.DrawString("Tomorrow we begin again\n the bitter dance of self\n  deception...", new Font(FontFamily.GenericMonospace, 9), Brushes.LightGreen, new PointF(170, 40));
+            gr.DrawString("      " + AssemblyProduct + "\n" + AssemblyDescription + "\n     " + String.Format("Version {0}", AssemblyVersion), new Font(FontFamily.GenericMonospace, 9), Brushes.LightBlue, new PointF(60, 180));
 
             pbMain.Image = modbit;
             tmrMain.Start();
@@ -146,7 +146,7 @@ namespace Sharp
             int width = bmp.Size.Width;
             int height = bmp.Size.Height;
 
-            for (int r = 0; r < height; r += 4)
+            for (int r = 0; r < height-4; r += 4)
                 for (int i = 0; i < width - 1; i++)
                 {
                     bmp.SetPixel(i, r, Color.FromArgb(0, 37, 80));

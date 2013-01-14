@@ -28,32 +28,31 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.pbMain = new System.Windows.Forms.PictureBox();
             this.tmrMain = new System.Windows.Forms.Timer(this.components);
+            this.pbMain = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pbMain)).BeginInit();
             this.SuspendLayout();
-            // 
-            // pbMain
-            // 
-            this.pbMain.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.pbMain.Image = global::Sharp.Properties.Resources.Безымянный;
-            this.pbMain.Location = new System.Drawing.Point(2, 2);
-            this.pbMain.Name = "pbMain";
-            this.pbMain.Size = new System.Drawing.Size(360, 280);
-            this.pbMain.TabIndex = 27;
-            this.pbMain.TabStop = false;
-            this.pbMain.MouseClick += new System.Windows.Forms.MouseEventHandler(this.logoPictureBox_MouseClick);
             // 
             // tmrMain
             // 
             this.tmrMain.Interval = 60;
             this.tmrMain.Tick += new System.EventHandler(this.tmrMain_Tick);
             // 
+            // pbMain
+            // 
+            this.pbMain.Image = global::Sharp.Properties.Resources.code2;
+            this.pbMain.Location = new System.Drawing.Point(2, 2);
+            this.pbMain.Name = "pbMain";
+            this.pbMain.Size = new System.Drawing.Size(300, 300);
+            this.pbMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbMain.TabIndex = 0;
+            this.pbMain.TabStop = false;
+            // 
             // frmAbout
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(364, 283);
+            this.ClientSize = new System.Drawing.Size(304, 303);
             this.Controls.Add(this.pbMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
@@ -73,8 +72,8 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pbMain;
         private System.Windows.Forms.Timer tmrMain;
+        private System.Windows.Forms.PictureBox pbMain;
 
     }
 }

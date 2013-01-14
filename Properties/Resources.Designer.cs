@@ -63,6 +63,16 @@ namespace Sharp.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap code2 {
+            get {
+                object obj = ResourceManager.GetObject("code2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap gtk_close_7736 {
             get {
                 object obj = ResourceManager.GetObject("gtk_close_7736", resourceCulture);
@@ -186,16 +196,6 @@ namespace Sharp.Properties {
         internal static System.Drawing.Bitmap stock_draw_line_3200 {
             get {
                 object obj = ResourceManager.GetObject("stock_draw_line_3200", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Безымянный {
-            get {
-                object obj = ResourceManager.GetObject("Безымянный", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
